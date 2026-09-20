@@ -21,7 +21,7 @@ def _measure(p):
         _SWEEPS[key] = perplexity_sweep(*key)
     code, data = verdict(a, dataset, s, _SWEEPS[key])[1:]
     return {"verdict": code, "r2": data["r2"], "r2_iso": data["r2_iso"], "r2_pca": data["r2_pca"], "far": data["far"], "far_iso": data["far_iso"], "far_pca": data["far_pca"],
-            "trust": data["trust"], "kl": data["kl"], "trust_alt": data.get("trust_alt"), "kl_alt": data.get("kl_alt")}
+            "trust": data["trust"], "kl": data["kl"], "trust_alt": data.get("trust_alt"), "kl_alt": data.get("kl_alt"), "kl_ref": data.get("kl_ref")}
 
 
 def test_every_preset_has_help_and_bands():

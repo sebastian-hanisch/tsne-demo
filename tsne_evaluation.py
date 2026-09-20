@@ -100,6 +100,7 @@ def run_tsne(X, s):
 class Analysis:
     tsne: object
     alt: object                      # bei Gauß-Kern: derselbe Lauf mit Student-t-Kern (Crowding-Vergleich), sonst None
+    ref: object                      # bei großer Lernrate: derselbe Lauf mit automatischer Lernrate (Referenz für 'Lernrate zu hoch'), sonst None
     isomap: object
     lle: object
     iso_2d: np.ndarray
@@ -107,6 +108,10 @@ class Analysis:
     iso_indices: np.ndarray
     metrics: dict                    # {"tsne", "isomap", "lle", "pca", "alt"?} -> {"r2","fid","near","far","trust"}
     snapshot_r2: dict                # Iteration -> R² der Einbettung zu diesem Zeitpunkt
+
+
+LR_REFERENCE_FROM = 200.0        # ab dieser Lernrate rechnet die Analyse einen Referenzlauf mit automatischer Lernrate daneben
+LR_HIGH_KL_FACTOR = 1.5          # 'Lernrate zu hoch': die KL-Divergenz endet mehr als 1.5-fach über der des Referenzlaufs
 
 
 def analyse(dataset, settings):
@@ -127,8 +132,13 @@ def analyse(dataset, settings):
         alt = run_tsne(dataset.X, Settings(**{**settings.__dict__, "kernel": "student"}))
         metrics["alt"] = _metrics(alt.embedding, dataset.z, Z)
         metrics["alt"]["kl"] = alt.kl
+    ref = None
+    if settings.learning_rate >= LR_REFERENCE_FROM:
+        ref = run_tsne(dataset.X, Settings(**{**settings.__dict__, "learning_rate": 0.0}))
+        metrics["ref"] = _metrics(ref.embedding, dataset.z, Z)
+        metrics["ref"]["kl"] = ref.kl
     snap = {it: r2_quadratic(y, dataset.z) for it, y in model.snapshots.items() if it > 0}
-    return Analysis(tsne=model, alt=alt, isomap=iso, lle=lle, iso_2d=iso2, pca_2d=pca2, iso_indices=iso.indices, metrics=metrics, snapshot_r2=snap)
+    return Analysis(tsne=model, alt=alt, ref=ref, isomap=iso, lle=lle, iso_2d=iso2, pca_2d=pca2, iso_indices=iso.indices, metrics=metrics, snapshot_r2=snap)
 
 
 PERPLEXITY_SMALL_BELOW = 10      # darunter: kleine Perplexität (im Sweep ist die Kurve ab 10 flach bis zackig, davor bricht sie ein)
@@ -154,13 +164,15 @@ def verdict(analysis, dataset, settings, sweep_rows=None):
     data = {"r2": m["tsne"]["r2"], "r2_iso": m["isomap"]["r2"], "r2_lle": m["lle"]["r2"], "r2_pca": m["pca"]["r2"], "far": m["tsne"]["far"], "far_pca": m["pca"]["far"],
             "far_iso": m["isomap"]["far"], "trust": m["tsne"]["trust"], "kl": model.kl, "perplexity": settings.perplexity, "n_iter": settings.n_iter,
             "outlier_pct": dataset.outlier_pct, "improvement": float((late - kl[-1]) / max(kl[-1], 1e-12)),
-            "rise": float(kl[-1] / max(kl[model.exaggeration_iters:].min(), 1e-12)) if len(kl) > model.exaggeration_iters else 1.0}
+            }
+    if "ref" in m:
+        data.update({"kl_ref": m["ref"]["kl"], "trust_ref": m["ref"]["trust"], "r2_ref": m["ref"]["r2"]})
     if "alt" in m:
         data.update({"trust_alt": m["alt"]["trust"], "kl_alt": m["alt"]["kl"], "r2_alt": m["alt"]["r2"]})
     data["diverged_at"] = model.diverged_at
     if model.diverged_at:
         return "warning", "diverged", data
-    if data["rise"] > 1.25:
+    if "ref" in m and model.kl > LR_HIGH_KL_FACTOR * m["ref"]["kl"]:
         return "warning", "lr_high", data
     if data["improvement"] > 0.03 and settings.n_iter < 500:
         return "warning", "not_converged", data

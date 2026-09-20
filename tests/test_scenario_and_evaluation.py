@@ -98,7 +98,7 @@ def test_perplexity_status_only_flags_small_perplexities():
     (2, 1.0, 0.25, 0, Settings(), "tsne_wins"),
     (2, 1.0, 0.25, 5, Settings(), "global_structure"),
     (2, 1.0, 0.25, 0, Settings(n_iter=50), "not_converged"),
-    (2, 1.0, 0.25, 0, Settings(learning_rate=1000.0), "lr_high"),
+    (2, 1.0, 0.25, 0, Settings(learning_rate=2000.0), "lr_high"),
     (3, 1.0, 0.25, 0, Settings(kernel="gauss"), "crowding"),
     (2, 0.0, 0.25, 0, Settings(), "no_advantage"),
 ])
@@ -106,6 +106,16 @@ def test_verdict_codes(q, curv, noise, out, settings, code):
     ds = make_dataset(300, q, curv, noise, out, 7)
     rows = perplexity_sweep(q, curv, noise, out, n_tours=120, n_iter=150, perplexities=(3, 10, 30), seeds=(100_000,))
     assert verdict(analyse(ds, settings), ds, settings, rows)[1] == code
+
+
+def test_high_learning_rate_ends_at_a_much_higher_kl_on_every_dataset():
+    """Das R² bei großer Lernrate ist chaotisch (auf CI 0.48 statt lokal 0.26) - die KL-Divergenz ist das robuste Zeichen; deshalb stützt sich Verdict und Preset darauf."""
+    for seed in (7, 8, 9):
+        ds = make_dataset(300, 2, 1.0, 0.25, 0, seed)
+        high = analyse(ds, Settings(learning_rate=2000.0))
+        assert high.ref is not None and high.tsne.kl > 1.5 * high.ref.kl
+    assert analyse(make_dataset(300, 2, 1.0, 0.25, 0, 7), Settings(learning_rate=200.0)).ref is not None
+    assert analyse(make_dataset(300, 2, 1.0, 0.25, 0, 7), Settings(learning_rate=50.0)).ref is None
 
 
 def test_divergence_is_detected_and_the_last_finite_state_is_kept():

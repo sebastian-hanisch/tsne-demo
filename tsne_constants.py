@@ -79,7 +79,7 @@ PRESETS = {
     "Sonderfahrten: t-SNE staucht die Extreme": {**_BASE, "outlier_pct": 5},
     "Perplexity zu klein": {**_BASE, "perplexity": 3},
     "Zu wenige Iterationen": {**_BASE, "n_iter": 50},
-    "Lernrate zu hoch": {**_BASE, "learning_rate": 1000.0},
+    "Lernrate zu hoch": {**_BASE, "learning_rate": 2000.0},
     "Gauß-Kern: Crowding": {**_BASE, "q": 3, "kernel": "gauss"},
 }
 PRESET_HELP = {
@@ -87,7 +87,7 @@ PRESET_HELP = {
     "Sonderfahrten: t-SNE staucht die Extreme": "5 % Sonderfahrten mit extremen Werten: PCA (R² ≈ 0.76) und Isomap (0.75) behalten die Größenordnung, t-SNE fällt auf 0.12 - es erhält Nachbarschaften, keine Abstände, und drückt die Extreme an den Rand der Wolke (Abstandstreue ferner Paare 0.14 gegen 0.95 bei der PCA).",
     "Perplexity zu klein": "Mit Perplexity 3 schaut jede Tour nur auf etwa drei Nachbarn: die Einbettung zerfällt in Fragmente (R² ≈ 0.59 statt 0.93, Abstandstreue ferner Paare 0.07).",
     "Zu wenige Iterationen": "Nach nur 50 Iterationen hat die Optimierung noch nicht konvergiert: die KL-Divergenz liegt bei etwa 0.49 statt 0.31 und das R² bei 0.64 - die KL-Kurve fällt noch steil.",
-    "Lernrate zu hoch": "Mit Lernrate 1000 (statt automatisch 50) überschießen die Gradientenschritte: die KL-Divergenz steigt wieder (1.6 statt 0.31), R² fällt auf 0.26, Trustworthiness auf 0.84.",
+    "Lernrate zu hoch": "Mit Lernrate 2000 (statt automatisch 50) überschießen die Gradientenschritte: die Optimierung endet bei einer KL-Divergenz von 1.7 statt 0.31, R² fällt auf etwa 0.20 und die Trustworthiness auf 0.85. Das genaue R² schwankt bei großer Lernrate je nach Datensatz stark (0.2-0.5), die hohe KL-Divergenz nicht.",
     "Gauß-Kern: Crowding": "Drei versteckte Faktoren, aber nur 2 Dimensionen zum Einbetten - mit dem Gauß-Kern des ursprünglichen SNE staut sich alles in der Mitte (Crowding): Trustworthiness 0.90 statt 0.97 mit Student-t, KL 0.82 statt 0.51.",
 }
 PRESET_EXPECTED_BANDS = {
@@ -95,6 +95,6 @@ PRESET_EXPECTED_BANDS = {
     "Sonderfahrten: t-SNE staucht die Extreme": {"verdict": "global_structure", "r2": (0.0, 0.3), "r2_pca": (0.6, 0.9), "r2_iso": (0.6, 0.9), "far": (0.0, 0.3), "far_pca": (0.85, 1.0)},
     "Perplexity zu klein": {"verdict": "perplexity_small", "r2": (0.45, 0.72), "far": (-0.1, 0.25)},
     "Zu wenige Iterationen": {"verdict": "not_converged", "r2": (0.5, 0.78), "kl": (0.4, 0.6)},
-    "Lernrate zu hoch": {"verdict": "lr_high", "r2": (0.1, 0.45), "trust": (0.75, 0.92), "kl": (1.0, 2.5)},
+    "Lernrate zu hoch": {"verdict": "lr_high", "r2": (0.0, 0.7), "trust": (0.75, 0.95), "kl": (0.9, 2.6), "kl_ref": (0.2, 0.5)},
     "Gauß-Kern: Crowding": {"verdict": "crowding", "trust": (0.85, 0.94), "trust_alt": (0.94, 1.0), "kl": (0.6, 1.1), "kl_alt": (0.4, 0.65)},
 }

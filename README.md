@@ -37,7 +37,7 @@ Messwerte (Seed 7, 300 Touren, q = 2, Perplexity 30, 750 Iterationen, wenn nicht
 | 5 % Sonderfahrten | t-SNE **R² 0.12**, PCA 0.76, Isomap 0.75, LLE 0.49; Abstandstreue ferner Paare 0.14 gegen 0.95 (PCA) |
 | Perplexity 3 | R² **0.59**, Abstandstreue ferner Paare 0.07 (Fragmente) |
 | 50 Iterationen | R² **0.64**, KL 0.49 statt 0.31; mit 100 Iterationen 0.85, mit 500 0.93 |
-| Lernrate 1000 (auto = 50) | R² **0.26**, Trustworthiness 0.84, KL 1.63 – die KL steigt am Ende wieder |
+| Lernrate 2000 (auto = 50) | KL **1.7** statt 0.31, Trustworthiness 0.85, R² 0.20 (über 4 Datensätze: KL 1.2–1.7, Trustworthiness 0.85–0.91, R² 0.18–0.51 – das R² schwankt stark, die hohe KL nicht) |
 | q = 3, Gauß-Kern | Trustworthiness **0.90** gegen 0.97 (Student-t), KL 0.82 gegen 0.51, R² 0.38 gegen 0.48 |
 | Gerade Daten (Krümmung 0) | **kein Vorteil**: R² 0.94 gegen 0.98 (PCA) |
 
@@ -48,7 +48,7 @@ Die Perplexity ändert daran nichts (bei 5 %: R² 0.12 / 0.12 / 0.09 für Perple
 **Perplexity-Fenster** (gekrümmte Daten, 3 feste Seeds × 200 Touren, 500 Iterationen): R² 0.58 (3), 0.75 (5), **0.92 (10)**, 0.86 (20), 0.90 (30), 0.93 (50), 0.88 (80); Abstandstreue ferner Paare 0.00 (3), 0.26 (5), 0.65 (10), 0.61 (20), 0.59 (30),
 0.73 (50), 0.65 (80). Nur der Einbruch unterhalb von etwa 10 ist verlässlich, danach ist die Kurve flach und zackig – kein zweiter Einbruch bei großen Perplexitäten (siehe "Was nicht funktioniert hat").
 
-**Lernrate und Early Exaggeration:** Lernrate 2 … 50: R² 0.93–0.94; 200: 0.90; 1000: 0.26; 5000: ≈ 0. Zu kleine Lernraten schaden bei 750 Iterationen nicht (die adaptiven Gains gleichen aus). Early Exaggeration 1: R² 0.86,
+**Lernrate und Early Exaggeration:** Lernrate 2 … 50: R² 0.93–0.94; 200: 0.90; 1000: 0.26 (Seed 7; über die Seeds 7–10: 0.26 / 0.59 / 0.72 / 0.35); 5000: ≈ 0. Zu kleine Lernraten schaden bei 750 Iterationen nicht (die adaptiven Gains gleichen aus). Early Exaggeration 1: R² 0.86,
 Abstandstreue ferner Paare **0.33** (bei 12: 0.69); 4: 0.69; 30: 0.61 – die Übertreibung sortiert zuerst die groben Gruppen, ohne sie geht globale Ordnung verloren.
 
 **Crowding** (Perplexity 30, Student-t / Gauß): q = 2: R² 0.93 / 0.95, Trustworthiness 0.99 / 0.98, KL 0.31 / 0.31 – kein Unterschied, die Fläche passt in 2 Dimensionen; q = 3: R² 0.48 / 0.38, Trustworthiness 0.97 / 0.90,

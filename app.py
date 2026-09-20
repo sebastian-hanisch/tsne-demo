@@ -167,7 +167,7 @@ with st.sidebar:
     )
     learning_rate = st.select_slider(
         "Lernrate", options=C.LR_CHOICES, key="lr_select", format_func=_lr_label,
-        help="Schrittweite des Gradientenabstiegs. auto = max(n / Exaggeration / 4, 50) wie in scikit-learn. Zu hoch: die Schritte überschießen, die KL-Divergenz steigt wieder.",
+        help="Schrittweite des Gradientenabstiegs. auto = max(n / Exaggeration / 4, 50) wie in scikit-learn. Zu hoch: die Schritte überschießen, die Optimierung endet bei deutlich höherer KL-Divergenz (die Demo rechnet ab 200 einen Referenzlauf mit auto daneben).",
     )
     exaggeration = st.slider(
         "Early Exaggeration", *bounds("exaggeration_slider"), key="exaggeration_slider",
@@ -362,8 +362,9 @@ if code == "diverged":
     )
 elif code == "lr_high":
     st.warning(
-        f"⚠️ **Lernrate zu hoch**: die KL-Divergenz steigt am Ende wieder auf das {vd['rise']:.2f}-fache ihres Minimums - die Schritte überschießen. R² der Faktoren nur {vd['r2']:.2f} (Isomap {vd['r2_iso']:.2f}), "
-        f"Trustworthiness {vd['trust']:.2f}. Eine kleinere Lernrate (oder 'auto') beruhigt die Optimierung."
+        f"⚠️ **Lernrate zu hoch**: die Optimierung endet bei einer KL-Divergenz von {vd['kl']:.2f}, ein Referenzlauf mit automatischer Lernrate erreicht {vd['kl_ref']:.2f} - die Schritte überschießen. "
+        f"R² der Faktoren {vd['r2']:.2f} gegen {vd['r2_ref']:.2f}, Trustworthiness {vd['trust']:.2f} gegen {vd['trust_ref']:.2f}. Eine kleinere Lernrate (oder 'auto') beruhigt die Optimierung. "
+        "(Bei großer Lernrate ist das Ergebnis chaotisch: je nach Datensatz und Rechner schwanken R² und Trustworthiness stark - die hohe KL-Divergenz ist das verlässliche Zeichen.)"
     )
 elif code == "not_converged":
     st.warning(
