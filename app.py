@@ -257,9 +257,9 @@ def _render(current_step, iteration=None):
         with view_slot.container():
             c1, c2 = st.columns([2, 3])
             c1.markdown(f"**Einbettung nach Iteration {it}**")
-            c1.plotly_chart(build_embedding(model.snapshots[it], z_color, "Koordinate 1", "Koordinate 2"), width="stretch", key="tsne_snapshot")
+            c1.plotly_chart(build_embedding(model.snapshots[it], z_color, "Koordinate 1", "Koordinate 2"), width="stretch", key=f"tsne_snapshot_{it}")
             c2.markdown("**Optimierung**")
-            c2.plotly_chart(build_kl_curve(model.kl_history, model.exaggeration_iters, marker=max(it, 1), r2_points=r2_points), width="stretch", key="tsne_kl_curve")
+            c2.plotly_chart(build_kl_curve(model.kl_history, model.exaggeration_iters, marker=max(it, 1), r2_points=r2_points), width="stretch", key=f"tsne_kl_curve_{it}")
     else:
         with view_slot.container():
             c1, c2 = st.columns(2)
