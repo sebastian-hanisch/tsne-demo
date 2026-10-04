@@ -14,7 +14,7 @@ der Kette t-SNE → UMAP → PaCMAP:
 pca-demo → isomap-demo   (global-geodätisch)
 pca-demo → lle-demo      (Kontrast zu Isomap: lokal-linear)
 pca-demo → tsne-demo     (probabilistisch; Schwäche: keine globale Struktur, kein Out-of-sample, Start-/Perplexity-/Optimierungs-Empfindlichkeit, O(n²) je Iteration)
-tsne-demo → UMAP → PaCMAP | Autoencoder   (weitere Stücke, noch nicht gebaut)
+tsne-demo → umap-demo → pacmap-demo | autoencoder-demo   (weitere Stücke, alle gebaut)
 ```
 
 ## Was die Demo zeigt
@@ -127,6 +127,4 @@ pytest tests/ -v
 
 ---
 
-Teil des [Operations-Research-Demo-Portfolios](https://sebastianhanisch.net/demos.html) von
-[Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning.
-Interesse an einer maßgeschneiderten Lösung? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Dimensionsreduktion: von PCA bis Autoencoder](https://sebastianhanisch.net/konzepte-dimensionsreduktion.html).
