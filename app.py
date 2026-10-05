@@ -358,7 +358,7 @@ Live für Ihr aktuelles Szenario über **feste Sweep-Seeds** (unabhängig vom De
 if code == "diverged":
     st.error(
         f"⛔ **Die Optimierung ist divergiert** (Iteration {vd['diverged_at']}): die Schritte waren so groß, dass die Punkte ins Unendliche flogen. Gezeigt wird der letzte endliche Stand - "
-        "R² und Trustworthiness sind hier bedeutungslos. Im Test (Gauß-Kern, q = 4, Seed 7) verhinderten das eine Lernrate von 10 statt 50 oder eine Early Exaggeration von 4 statt 12."
+        "R², Trustworthiness und KL sind hier bedeutungslos (die KL ist rechnerisch unbeschränkt). Im Test (Gauß-Kern, q = 4, Seed 7) verhinderten das eine Lernrate von 10 statt 50 oder eine Early Exaggeration von 4 statt 12."
     )
 elif code == "lr_high":
     st.warning(
@@ -482,7 +482,7 @@ if st.session_state.get("oos_on"):
     st.caption(
         f"Sterne = zurückgehaltene Touren, mit der Näherung eingebettet: R² der wahren Faktoren **{oos['r2_test']:.2f}** für die neuen, {oos['r2_train']:.2f} für die Trainings-Touren. "
         f"Beim Neu-Rechnen mit allen Touren verschieben sich die Trainings-Touren um einen Procrustes-Abstand von **{oos['shift']:.2f}** (0 = unverändert). "
-        "Über 6 feste Seeds (Standardeinstellungen) lag das R² der Näherung zwischen 0.67 und 0.95, die Verschiebung zwischen 0.01 und 0.47."
+        "Über 6 feste Seeds (Standardeinstellungen) lag das R² der Näherung zwischen 0.65 und 0.95, die Verschiebung zwischen 0.01 und 0.47."
     )
 
 st.markdown("---")
@@ -513,7 +513,7 @@ if crowd is not None:
     })
     st.caption(
         f"Mit q = {dataset.q} versteckten Faktoren: Trustworthiness {crowd['student']['trust']:.2f} (Student-t) gegen {crowd['gauss']['trust']:.2f} (Gauß). "
-        + ("Bei q = 2 passt die Fläche in 2 Dimensionen - dort zeigt sich der Unterschied kaum (im Test Trustworthiness 0.99 gegen 0.98, R² 0.93 gegen 0.95)." if dataset.q <= 2 else "Bei q = 3 lagen im Test (Seed 7) Trustworthiness 0.97 gegen 0.90, KL 0.51 gegen 0.82 und R² 0.48 gegen 0.38 - bei q = 4 kann der Gauß-Kern schon in der Early-Exaggeration-Phase divergieren.")
+        + ("Bei q = 2 passt die Fläche in 2 Dimensionen - dort zeigt sich der Unterschied kaum (im Test Trustworthiness 0.99 gegen 0.98, R² 0.93 gegen 0.95)." if dataset.q <= 2 else "Bei q = 3 lagen im Test (Seed 7) Trustworthiness 0.97 gegen 0.90, KL 0.51 gegen 0.82 und R² 0.48 gegen 0.48 (das R² einzelner Läufe schwankt, Trustworthiness und KL sind die verlässlichen Zeichen) - bei q = 4 kann der Gauß-Kern schon in der Early-Exaggeration-Phase divergieren.")
     )
 
 st.markdown("---")

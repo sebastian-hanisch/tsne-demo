@@ -74,7 +74,7 @@ def low_dim_affinities(Y, kernel="student"):
         off = ~np.eye(len(Y), dtype=bool)
         W = np.exp(-(np.where(off, d2, d2[off].min()) - d2[off].min()))
     np.fill_diagonal(W, 0.0)
-    return np.maximum(W / W.sum(), 1e-12), W
+    return np.maximum(W / W.sum(), np.finfo(float).tiny), W              # Untergrenze nur gegen log(0); eine größere (1e-12) verfälschte die angezeigte KL des Gauß-Kerns
 
 
 def gradient(P, Y, kernel="student"):

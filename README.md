@@ -38,7 +38,7 @@ Messwerte (Seed 7, 300 Touren, q = 2, Perplexity 30, 750 Iterationen, wenn nicht
 | Perplexity 3 | R² **0.59**, Abstandstreue ferner Paare 0.07 (Fragmente) |
 | 50 Iterationen | R² **0.64**, KL 0.49 statt 0.31; mit 100 Iterationen 0.85, mit 500 0.93 |
 | Lernrate 2000 (auto = 50) | KL **1.7** statt 0.31, Trustworthiness 0.85, R² 0.20 (über 4 Datensätze: KL 1.2–1.7, Trustworthiness 0.85–0.91, R² 0.18–0.51 – das R² schwankt stark, die hohe KL nicht) |
-| q = 3, Gauß-Kern | Trustworthiness **0.90** gegen 0.97 (Student-t), KL 0.82 gegen 0.51, R² 0.38 gegen 0.48 |
+| q = 3, Gauß-Kern | Trustworthiness **0.90** gegen 0.97 (Student-t), KL 0.82 gegen 0.51, R² 0.48 gegen 0.48 (gleich: das R² einzelner Läufe schwankt, Trustworthiness und KL sind die verlässlichen Zeichen) |
 | Gerade Daten (Krümmung 0) | **kein Vorteil**: R² 0.94 gegen 0.98 (PCA) |
 
 **Sonderfahrten** (Anteil der Touren mit zehnfach vergrößertem Zeitdruck-Faktor; das R² wird hier von den Extremen dominiert – genau das ist der Punkt): R² t-SNE / PCA / Isomap / LLE bei 0 %: 0.93 / 0.50 / 0.98 / 0.96;
@@ -51,14 +51,14 @@ Die Perplexity ändert daran nichts (bei 5 %: R² 0.12 / 0.12 / 0.09 für Perple
 **Lernrate und Early Exaggeration:** Lernrate 2 … 50: R² 0.93–0.94; 200: 0.90; 1000: 0.26 (Seed 7; über die Seeds 7–10: 0.26 / 0.59 / 0.72 / 0.35); 5000: ≈ 0. Zu kleine Lernraten schaden bei 750 Iterationen nicht (die adaptiven Gains gleichen aus). Early Exaggeration 1: R² 0.86,
 Abstandstreue ferner Paare **0.33** (bei 12: 0.69); 4: 0.69; 30: 0.61 – die Übertreibung sortiert zuerst die groben Gruppen, ohne sie geht globale Ordnung verloren.
 
-**Crowding** (Perplexity 30, Student-t / Gauß): q = 2: R² 0.93 / 0.95, Trustworthiness 0.99 / 0.98, KL 0.31 / 0.31 – kein Unterschied, die Fläche passt in 2 Dimensionen; q = 3: R² 0.48 / 0.38, Trustworthiness 0.97 / 0.90,
-KL 0.51 / 0.82; q = 4: der Gauß-Kern **divergiert** schon in Iteration 96 (Early-Exaggeration-Phase; KL 18.3, Trustworthiness 0.53), Student-t bleibt stabil (R² 0.21, Trustworthiness 0.91, KL 0.80). Mit Lernrate 10 statt 50
+**Crowding** (Perplexity 30, Student-t / Gauß): q = 2: R² 0.93 / 0.95, Trustworthiness 0.99 / 0.98, KL 0.31 / 0.36 – kaum ein Unterschied, die Fläche passt in 2 Dimensionen; q = 3: R² 0.48 / 0.48, Trustworthiness 0.97 / 0.90,
+KL 0.51 / 0.82; q = 4: der Gauß-Kern **divergiert** schon in Iteration 96 (Early-Exaggeration-Phase; die KL ist dann rechnerisch unbeschränkt, die Anzeige deckelt bei etwa 700; Trustworthiness 0.53), Student-t bleibt stabil (R² 0.21, Trustworthiness 0.91, KL 0.80). Mit Lernrate 10 statt 50
 oder Early Exaggeration 4 statt 12 läuft der Gauß-Kern bei q = 4 durch (KL 1.03).
 
 **Stabilität** (vier zufällige Starts, Perplexity 30): q = 2 sauber – alle vier Läufe liefern dasselbe Bild (Procrustes-Abstand 0.00 zum PCA-Start); q = 3: R² 0.36–0.56, Procrustes-Abstand zum PCA-Start 0.46–0.81;
 q = 2 mit Rauschen 0.8: R² 0.73–0.79, Procrustes 0.21–0.51.
 
-**Out-of-sample** (letzte 20 % zurückgehalten, 6 feste Seeds): die Näherung (gewichteter Mittelwert der 10 nächsten Trainings-Touren – kein Teil von t-SNE) erreicht R² 0.67–0.95; beim Neu-Rechnen mit allen Touren
+**Out-of-sample** (letzte 20 % zurückgehalten, 6 feste Seeds): die Näherung (gewichteter Mittelwert der 10 nächsten Trainings-Touren – kein Teil von t-SNE) erreicht R² 0.65–0.95; beim Neu-Rechnen mit allen Touren
 verschieben sich die bereits eingebetteten um einen Procrustes-Abstand von 0.01–0.47. (LLE kann neue Touren über Rekonstruktionsgewichte einbetten: Median 0.94, siehe lle-demo.)
 
 **Rechenzeit** (lokale Messung, 500 Iterationen, ein Lauf je n): n = 100: t-SNE 0.09 s, Isomap 3 ms, LLE 5 ms; n = 400: 3.1 s, 0.19 s, 0.05 s; **n = 600: 7 s, 0.6 s, 0.12 s** (PCA 0.2 ms) – t-SNE rechnet in jeder Iteration alle n² Paare.

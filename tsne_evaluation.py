@@ -226,7 +226,8 @@ def out_of_sample(dataset, settings, fraction=C.HOLDOUT_FRACTION, k=C.OOS_K):
     y_test = embed_new_naive(model, dataset.X[test], k)
     beta, *_ = np.linalg.lstsq(_quad_features(model.embedding), dataset.z[train], rcond=None)
     z_test = dataset.z[test]
-    r2_test = float(1 - (z_test - _quad_features(y_test) @ beta).var(0).sum() / z_test.var(0).sum())
+    resid = z_test - _quad_features(y_test) @ beta                                                     # nicht zentrieren: ein konstanter Versatz der Vorhersage zählt als Fehler
+    r2_test = float(1 - (resid ** 2).sum() / ((z_test - z_test.mean(0)) ** 2).sum())
     full = run_tsne(dataset.X, settings)
     return {"train": train, "test": test, "model": model, "y_test": y_test, "r2_test": r2_test, "r2_train": r2_quadratic(model.embedding, dataset.z[train]),
             "shift": procrustes_disparity(full.embedding[train], model.embedding)}
