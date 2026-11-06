@@ -95,6 +95,19 @@ Unterschied mit der KL-Divergenz, minimiert per Gradientenabstieg. Was dabei gew
 direkt gegen PCA, Isomap und LLE. Wie das Verfahren funktioniert, erklärt der aufgeklappte Abschnitt direkt darunter.
 """
 )
+
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/tsne-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Jede Lieferroute hat zwölf Kennzahlen. Das ist zu viel, um sie als Bild zu zeigen. **t-SNE** bildet jede Tour auf einen Punkt in der Ebene ab, und zwar so, dass ähnliche Touren nebeneinander landen. Dazu fragt es für jede Tour, **wie wahrscheinlich sie jede andere als Nachbarn wählen würde**. Wie viele Nachbarn dabei ungefähr zählen, legt die **Perplexity** fest. Dann werden die Punkte so lange verschoben, bis die Nachbarschaften im Bild zu denen der Kennzahlen passen.
+
+Das Verfahren erhält Nachbarschaften, keine Abstände. Wie weit Gruppen im Bild auseinanderliegen, hat keine feste Bedeutung. Neue Touren lassen sich nicht exakt einzeichnen, ohne neu zu rechnen. Die Demo zeigt außerdem, was passiert, wenn man Nachbarzahl, Rundenzahl oder Schrittweite schlecht wählt.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/tsne-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
 st.caption(
     "Anders als die Fall-Demos im Portfolio, die an einem Anwendungsfall mehrere Verfahren vergleichen, zeigt diese Demo - viertes Stück der "
     "Dimensionsreduktion-Linie der \"Konzepte\"-Reihe - **ein** Verfahren an einem wachsenden Beispiel: t-SNE behebt die Linearitätsschwäche der PCA über lokale Nachbarschafts-Wahrscheinlichkeiten - "
@@ -549,6 +562,24 @@ else:
 st.markdown("---")
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/tsne-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Gegeben sind $n$ Touren mit je zwölf Kennzahlen $x_i$. Gesucht sind Punkte $y_i$ in der Ebene, deren Nachbarschaftswahrscheinlichkeiten $q_{ij}$ zu den Wahrscheinlichkeiten $p_{ij}$ der Kennzahlen passen.
+
+| Symbol | Bedeutung |
+|---|---|
+| $x_i$, $y_i$ | Kennzahlen (z-Werte) bzw. Bildpunkt in der Ebene von Tour $i$ |
+| $p_{j|i}$, $p_{ij}$ | Wahrscheinlichkeit, dass Tour $i$ die Tour $j$ als Nachbarn wählt; symmetrisierte Fassung |
+| $\sigma_i$, $\mathrm{Perp}$ | Breite der Gauß-Glocke um Tour $i$; Perplexity, die effektive Nachbarzahl |
+| $q_{ij}$ | dieselbe Nachbarschaftswahrscheinlichkeit im Bild, mit Student-t-Kern (schwere Ränder) |
+| $\mathrm{KL}(P \Vert Q)$ | Abstand zwischen den Verteilungen $P$ und $Q$, die Zielfunktion der Optimierung |
+| $k$, $U_i$, $r(i,j)$, $T$ | Nachbarzahl der Trustworthiness; falsche Nachbarn von Tour $i$ im Bild; Rang von $j$ unter den Nachbarn von $i$ im Original; Trustworthiness (1 heißt keine falschen Nachbarn) |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/tsne-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Affinitäten im Originalraum.** Für Punkte $x_i \in \mathbb{R}^{12}$ (z-Werte) ist die bedingte Wahrscheinlichkeit, dass $i$ den Punkt $j$ als Nachbarn wählt,
