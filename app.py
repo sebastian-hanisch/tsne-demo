@@ -298,7 +298,7 @@ else:
 if step == 1:
     st.caption(
         f"Die gewählte Tour (Stern, nahe der Mitte): die Gauß-Breite σ = {model.sigma[focus]:.2f} (in z-Einheiten) ist so gewählt, dass ihre Nachbarschaft **{model.perplexity:g} effektive Nachbarn** hat. "
-        f"Die nächsten 10 Nachbarn tragen zusammen {p_row[order[:10]].sum() * 100:.0f} % der Wahrscheinlichkeit, die nächsten 40 {p_row[top].sum() * 100:.0f} %. Ferne Touren spielen praktisch keine Rolle."
+        f"Die nächsten 10 Nachbarn vereinen zusammen {p_row[order[:10]].sum() * 100:.0f} % der Wahrscheinlichkeit, die nächsten 40 {p_row[top].sum() * 100:.0f} %. Ferne Touren spielen praktisch keine Rolle."
     )
 elif step == 2:
     st.caption(
